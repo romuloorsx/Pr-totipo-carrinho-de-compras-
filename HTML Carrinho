@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Loja de Hardware</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .loja-container { display: flex; justify-content: space-between; gap: 20px; }
+        .coluna { width: 32%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
+        h2 { border-bottom: 2px solid #eee; padding-bottom: 5px; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Minha Loja de Hardware</h1>
+    </header>
+    <hr>
+
+    <main class="loja-container">
+
+        <section class="coluna">
+            <h2>Catálogo de Produtos</h2>
+            <input type="text" id="busca" placeholder="Pesquisar no catálogo...">
+            <button onclick="pesquisarProdutos()">Buscar</button>
+            <div id="produtos-disponiveis"></div>
+        </section>
+
+        <section class="coluna">
+            <h2>Sua Cesta</h2>
+            <div id="carrinho-itens"></div>
+            <hr>
+            <h3 id="valor-total">Total: R$ 0.00</h3>
+            <button onclick="concluirPedido()">Concluir Pedido</button>
+        </section>
+
+        <section class="coluna">
+            <h2>Resumo do Pedido</h2>
+            <div id="resumo-pedido"></div>
+        </section>
+
+    </main>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
