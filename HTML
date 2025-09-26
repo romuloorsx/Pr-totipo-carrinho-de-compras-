@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Acesso Restrito</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f2f2f2; text-align: center; padding-top: 100px; }
+        .container { background: white; padding: 30px; border-radius: 10px; display: inline-block; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        input { display: block; margin: 10px 0; padding: 8px; width: 200px; }
+        button { padding: 10px 15px; width: 100%; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Controle de Acesso</h1>
+       
+        <input type="text" id="usuario" placeholder="Nome de usuário">
+        <input type="password" id="senha" placeholder="Palavra-chave">
+       
+        <button onclick="autenticarUsuario()">Acessar</button>
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
