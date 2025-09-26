@@ -1,0 +1,168 @@
+// --- Estado da Aplicação ---
+// Armazena os itens que o usuário selecionou.
+var cestaDeCompras = [];
+
+// Catálogo de produtos da loja.
+var catalogoDeProdutos = [
+    { id: 101, nome: 'Placa de Vídeo RTX 4090', preco: 9500.00 },
+    { id: 102, nome: 'Processador Intel i9', preco: 3250.50 },
+    { id: 103, nome: 'Memória RAM 32GB DDR5', preco: 980.00 },
+    { id: 104, nome: 'SSD NVMe 2TB', preco: 850.75 }
+];
+
+
+// --- Funções Principais ---
+
+// Função chamada para autenticar o usuário na tela de login.
+function autenticarUsuario() {
+    console.log("Processando tentativa de acesso...");
+    // Credenciais de acesso.
+    const usuarioValido = "amigo";
+    const senhaValida = "1234";
+
+    // Pega os dados dos campos de input.
+    const usuarioDigitado = document.getElementById("usuario").value;
+    const senhaDigitada = document.getElementById("senha").value;
+
+    // Valida as credenciais.
+    if (usuarioDigitado === usuarioValido && senhaDigitada === senhaValida) {
+        console.log("Acesso concedido. Carregando loja...");
+        // Redireciona para a página da loja.
+        window.location.href = "carrinho.html";
+    } else {
+        console.error("Acesso negado. Credenciais inválidas.");
+        alert("Usuário ou senha não conferem.");
+    }
+}
+
+// Renderiza a lista de produtos na página.
+function exibirProdutos(listaDeExibicao) {
+    console.log(`Renderizando ${listaDeExibicao.length} produtos.`);
+    const secaoProdutos = document.getElementById('produtos-disponiveis');
+    let htmlParaInserir = ''; // Acumula o HTML em uma variável.
+
+    // Usa o loop for...of para percorrer a lista.
+    for (const produto of listaDeExibicao) {
+        // Usa template literals (com crase ``) para construir o HTML.
+        htmlParaInserir += `
+            <p>
+                ${produto.nome} - R$ ${produto.preco.toFixed(2)}
+                <button onclick="adicionarItemNaCesta(${produto.id})">Adicionar</button>
+            </p>
+        `;
+    }
+    // Insere todo o HTML de uma vez no final do loop.
+    secaoProdutos.innerHTML = htmlParaInserir;
+}
+
+// Filtra os produtos do catálogo com base na busca do usuário.
+function pesquisarProdutos() {
+    const textoDaBusca = document.getElementById('busca').value;
+    console.log(`Pesquisando por: "${textoDaBusca}"`);
+
+    // Usa o método .filter() para criar um novo array com os resultados.
+    const resultados = catalogoDeProdutos.filter(function(produto) {
+        return produto.nome.toLowerCase().includes(textoDaBusca.toLowerCase());
+    });
+   
+    // Exibe apenas os produtos que passaram no filtro.
+    exibirProdutos(resultados);
+}
+
+// Adiciona um item selecionado à cesta de compras.
+function adicionarItemNaCesta(idDoProduto) {
+    console.log(`Tentando adicionar o produto de ID: ${idDoProduto}`);
+
+    // Usa o método .find() para encontrar o produto no catálogo.
+    const produtoEncontrado = catalogoDeProdutos.find(p => p.id === idDoProduto);
+
+    if (produtoEncontrado) {
+        cestaDeCompras.push(produtoEncontrado);
+        console.log("Produto adicionado com sucesso:", produtoEncontrado);
+    }
+   
+    console.log("Cesta atual:", cestaDeCompras);
+    // Atualiza a visualização da cesta.
+    renderizarCesta();
+}
+
+// Remove um item da cesta de compras.
+function removerItemDaCesta(indice) {
+    const itemRemovido = cestaDeCompras[indice];
+    console.log(`Removendo item do índice ${indice}:`, itemRemovido);
+   
+    // Usa o método .splice() para remover o item do array.
+    cestaDeCompras.splice(indice, 1);
+   
+    console.log("Cesta atual:", cestaDeCompras);
+    // Atualiza a visualização da cesta.
+    renderizarCesta();
+}
+
+// Renderiza o conteúdo da cesta de compras na página.
+function renderizarCesta() {
+    console.log("Atualizando a exibição da cesta de compras.");
+    const secaoCesta = document.getElementById('carrinho-itens');
+    const elementoTotal = document.getElementById('valor-total');
+    let valorTotal = 0;
+    let htmlDaCesta = '';
+
+    if (cestaDeCompras.length === 0) {
+        htmlDaCesta = '<p>Sua cesta de compras está vazia.</p>';
+    } else {
+        // Usa o método .forEach() para percorrer a cesta.
+        cestaDeCompras.forEach(function(item, indice) {
+            htmlDaCesta += `
+                <p>
+                    ${item.nome} - R$ ${item.preco.toFixed(2)}
+                    <button onclick="removerItemDaCesta(${indice})">Remover</button>
+                </p>
+            `;
+            valorTotal += item.preco;
+        });
+    }
+
+    secaoCesta.innerHTML = htmlDaCesta;
+    elementoTotal.textContent = `Total: R$ ${valorTotal.toFixed(2)}`;
+}
+
+// Finaliza o pedido, exibe o resumo e limpa a cesta.
+function concluirPedido() {
+    console.log("Iniciando o fechamento do pedido...");
+    const secaoResumo = document.getElementById('resumo-pedido');
+
+    if (cestaDeCompras.length === 0) {
+        console.warn("Tentativa de finalizar com a cesta vazia.");
+        alert("Sua cesta está vazia!");
+        return; // Interrompe a função.
+    }
+
+    let totalPedido = 0;
+    let reciboHTML = '<h3>Pedido Concluído!</h3>';
+
+    cestaDeCompras.forEach(function(item) {
+        reciboHTML += `<p>${item.nome} - R$ ${item.preco.toFixed(2)}</p>`;
+        totalPedido += item.preco;
+    });
+
+    reciboHTML += `<h4>Valor Total: R$ ${totalPedido.toFixed(2)}</h4>`;
+    secaoResumo.innerHTML = reciboHTML;
+   
+    // Limpa a cesta de compras.
+    cestaDeCompras = [];
+    console.log("Cesta de compras esvaziada.");
+   
+    // Atualiza a exibição da cesta para mostrar que está vazia.
+    renderizarCesta();
+}
+
+// --- Inicialização ---
+// Garante que o código só rode após o carregamento completo da página.
+window.onload = function() {
+    // Verifica se estamos na página da loja antes de tentar exibir os produtos.
+    if (document.getElementById('produtos-disponiveis')) {
+        console.log("Página da loja carregada. Exibindo catálogo inicial.");
+        exibirProdutos(catalogoDeProdutos);
+        renderizarCesta();
+    }
+}
